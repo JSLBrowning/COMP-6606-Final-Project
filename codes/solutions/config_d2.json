@@ -1,0 +1,28 @@
+{
+  "ea_mode": "MOEA",
+  "number_objectives": 3,
+  "random_seed": "time",
+  "number_runs": 30,
+  "termination_evaluation": 10000,
+  "termination_no_change": 200,
+  "black_cell_constraints": true,
+  "fitness_function": "original",
+  "repair_function": false,
+  "penalty_shrink_factor": 0.9,
+  "penalty_minus_factor": 2,
+  "self_adaptive": false,
+  "learning_rate": 1,
+  "initial_mutation_rate": 0.2,
+  "parent_selection": "k_tournament",
+  "survival_strategy": "plus",
+  "survival_selection": "truncation",
+  "k_tournament_parents": 10,
+  "k_tournament_survivals": 10,
+  "mu_size": 50,
+  "lambda_size": 70,
+  "log_file": "./logs/result_log_green_d2.txt",
+  "solution_file": "./solutions/solution_green_d2.txt"
+}
+
+
+
