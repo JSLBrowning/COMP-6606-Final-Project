@@ -1,0 +1,4 @@
+light up puzzle
+hill climbing search
+simulated annealing
+deep neural networks
