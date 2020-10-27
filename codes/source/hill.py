@@ -7,6 +7,181 @@ import random
 from copy import deepcopy
 
 
+# Map class stores all game properties related to the map
+class Map:
+    size = 0
+    column = 0
+    row = 0
+    board = []
+    optimized_board = []
+    black_cells = []
+
+    def __init__(self, map_file, config):
+        self.board = []
+        self.size = 0
+        self.row = 0
+        self.column = 0
+
+        self.file = map_file
+        self.black_cells = self.read_map()
+        self.original_board = self.load_board()
+        self.board = self.original_board
+        self.optimized_board = self.validation_board()
+
+    # read the map data and store it
+    def read_map(self):
+        read_file = []  # original file data read
+        puzzle = []  # initial puzzle will be returned
+
+        with open(self.file) as fp:
+            line = fp.readline()
+            read_file.append(line)
+            while line:
+                line = fp.readline()
+                read_file.append(line)
+
+        #  store first/second lines of data
+        self.column = int(read_file[0])
+        self.row = int(read_file[1])
+
+        length = len(read_file)
+
+        # store data from the 3rd lines
+        for i in range(2, length - 1):
+            puzzle.append([])
+            message = read_file[i].split(" ")
+            for j in range(0, len(message)):
+                puzzle[i - 2].append(int(message[j]))
+
+        return puzzle
+
+    def create_board(self):
+        board = []  # array will be returned
+        for x in range(0, self.row):
+            board.append([])
+            for y in range(0, self.column):
+                board[x].append(init.CELL_EMPTY)
+        return board
+
+    def load_board(self):
+        new_board = self.create_board()
+        numbers = len(self.black_cells)
+        for i in range(0, numbers):
+            col = self.black_cells[i][0] - 1
+            row = self.black_cells[i][1] - 1
+            value = self.black_cells[i][2]
+            new_board[row][col] = value
+        return new_board
+
+    # initialize the map under validation
+    # all cells will fill up by bulbs if only unique way to do it
+    def validation_board(self):
+        # set Zero adjacent constraints
+        new_board = deepcopy(self.board)
+        rows = self.row
+        cols = self.column
+        for i in range(0, rows):
+            for j in range(0, cols):
+                if new_board[i][j] == init.CELL_BLACK_ZERO:
+                    if i < rows - 1:
+                        if new_board[i + 1][j] == init.CELL_EMPTY:
+                            new_board[i + 1][j] = init.CELL_BULB_ZERO
+                    if j < cols - 1:
+                        if new_board[i][j + 1] == init.CELL_EMPTY:
+                            new_board[i][j + 1] = init.CELL_BULB_ZERO
+                    if i > 0:
+                        if new_board[i - 1][j] == init.CELL_EMPTY:
+                            new_board[i - 1][j] = init.CELL_BULB_ZERO
+                    if j > 0:
+                        if new_board[i][j - 1] == init.CELL_EMPTY:
+                            new_board[i][j - 1] = init.CELL_BULB_ZERO
+
+        # validating all unique bulbs
+        new_bulb = True
+        while new_bulb:
+            new_bulb = False
+            for i in range(0, rows):
+                for j in range(0, cols):
+                    if 0 < new_board[i][j] < init.CELL_BLACK_FIVE:
+                        grids = []
+                        cell_empty = False
+                        if i < rows - 1:
+                            if new_board[i + 1][j] == init.CELL_EMPTY:
+                                cell_empty = True
+                                grids.append([i + 1, j])
+                            elif new_board[i + 1][j] == init.CELL_BULB:
+                                grids.append([i + 1, j])
+                        if j < cols - 1:
+                            if new_board[i][j + 1] == init.CELL_EMPTY:
+                                cell_empty = True
+                                grids.append([i, j + 1])
+                            elif new_board[i][j + 1] == init.CELL_BULB:
+                                grids.append([i, j + 1])
+                        if i > 0:
+                            if new_board[i - 1][j] == init.CELL_EMPTY:
+                                cell_empty = True
+                                grids.append([i - 1, j])
+                            elif new_board[i - 1][j] == init.CELL_BULB:
+                                grids.append([i - 1, j])
+                        if j > 0:
+                            if new_board[i][j - 1] == init.CELL_EMPTY:
+                                cell_empty = True
+                                grids.append([i, j - 1])
+                            elif new_board[i][j - 1] == init.CELL_BULB:
+                                grids.append([i, j - 1])
+                        if new_board[i][j] == len(grids):
+                            for x in range(0, len(grids)):
+                                new_board[grids[x][0]][grids[x][1]] = init.CELL_BULB
+
+                            # set cells lighted
+                            set_lighted = check_bulb_shining(new_board, rows, cols)
+
+                            if set_lighted:
+                                print("Error in lightening white cells")
+                                # breakpoint()
+
+                            # ask for more loop in while since a new bulb has been set
+                            if cell_empty:
+                                new_bulb = True
+
+                        # check the empty cell which will be set as can't put a bulb in
+                        # because the number of black cell also reaches the requirement
+                        # only active when a new bulb has been set
+                        if new_bulb:
+                            if 0 < new_board[i][j] < init.CELL_BLACK_FOUR:
+                                cell_empty_adjacent = []
+                                cell_bulb_adjacent = 0
+                                if i < rows - 1:
+                                    if new_board[i + 1][j] == init.CELL_EMPTY:
+                                        cell_empty_adjacent.append([i + 1, j])
+                                    elif new_board[i + 1][j] == init.CELL_BULB:
+                                        cell_bulb_adjacent += 1
+                                if j < cols - 1:
+                                    if new_board[i][j + 1] == init.CELL_EMPTY:
+                                        cell_empty_adjacent.append([i, j + 1])
+                                    elif new_board[i][j + 1] == init.CELL_BULB:
+                                        cell_bulb_adjacent += 1
+                                if i > 0:
+                                    if new_board[i - 1][j] == init.CELL_EMPTY:
+                                        cell_empty_adjacent.append([i - 1, j])
+                                    elif new_board[i - 1][j] == init.CELL_BULB:
+                                        cell_bulb_adjacent += 1
+                                if j > 0:
+                                    if new_board[i][j - 1] == init.CELL_EMPTY:
+                                        cell_empty_adjacent.append([i, j - 1])
+                                    elif new_board[i][j - 1] == init.CELL_BULB:
+                                        cell_bulb_adjacent += 1
+
+                                if cell_bulb_adjacent and len(cell_empty_adjacent):
+                                    if new_board[i][j] == cell_bulb_adjacent:
+                                        for x in range(0, len(cell_empty_adjacent)):
+                                            row_update = cell_empty_adjacent[x][0]
+                                            col_update = cell_empty_adjacent[x][1]
+                                            new_board[row_update][col_update] = init.CELL_BULB_ZERO
+
+        return new_board
+
+
 # set bulbs into white cells
 # return - array: map_data (every rows * cols)with bulbs in it
 def set_random_bulbs(puzzle_map, white_cells, bulb_number):
