@@ -15,9 +15,11 @@ class Map:
     board = []
     optimized_board = []
     black_cells = []
+    available_cells = []
 
     def __init__(self, map_file, config):
         self.board = []
+        self.available_cells = []
         self.size = 0
         self.row = 0
         self.column = 0
@@ -27,6 +29,7 @@ class Map:
         self.original_board = self.load_board()
         self.board = self.original_board
         self.optimized_board = self.validation_board()
+        self.available_cells = self.set_available_cells()
 
     # read the map data and store it
     def read_map(self):
@@ -72,6 +75,16 @@ class Map:
             value = self.black_cells[i][2]
             new_board[row][col] = value
         return new_board
+
+    # set available cells for hill climbing
+    def set_available_cells(self):
+        cells = []
+        for i in range(0, self.row):
+            for j in range(0, self.column):
+                if self.optimized_board[i][j] == init.CELL_EMPTY:
+                    cells.append([i, j])
+        return cells
+
 
     # initialize the map under validation
     # all cells will fill up by bulbs if only unique way to do it
