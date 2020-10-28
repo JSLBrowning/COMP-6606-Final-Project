@@ -1,3 +1,11 @@
+# Project:      COMP 6600/6606 Final Project: “Shedding Some Light on the Light Up Puzzle with Artificial Intelligence”
+# Program name: main.py
+# Author:       James Browning (jlb0181@auburn.edu), Robert Perera (rzp0063@auburn.edu),
+# and Libo Sun (lzs0101@auburn.edu)
+# Date created: October 8th, 2020
+# Purpose:      Use techniques learned in COMP 6600/6606 Artificial Intelligence to solve the light up puzzle.
+
+
 # import from project functions
 from copy import deepcopy
 
@@ -90,8 +98,8 @@ def main():
                 create_csv((board_i.astype(np.uint8)), init_name)
                 create_csv((board_opt).astype(np.uint8), opt_name)
 
-        #song = get_play_path()
-        #playsound(song)
+        song = get_play_path()
+        playsound(song)
 
         exit(0)
 
