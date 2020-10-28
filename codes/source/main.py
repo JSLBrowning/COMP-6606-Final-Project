@@ -13,7 +13,7 @@ import initial as init
 import hill
 import logs
 from board import GameBoard
-from utils import Generate_Board, get_img_path, get_play_path, create_csv, get_csv
+from utils import Generate_Board, get_img_path, get_play_path, generate_dataset
 
 # --------imports from system------
 import os
@@ -44,7 +44,7 @@ def main():
         print("Error")
         sys.exit(0)
     
-    elif len(sys.argv) == 3 or len(sys.argv) >3:    
+    if len(sys.argv) == 3 or len(sys.argv) > 3:    
         
         # reading arguments from arg vector
         map_file = sys.argv[1]
@@ -93,13 +93,13 @@ def main():
             #Generate cvs files for dataset if argv[3] is --dataset
             if "--dataset" in sys.argv:
 
-                init_name = 'Initial_Sates'
-                opt_name = 'Optimized_Data'
-                create_csv((board_i.astype(np.uint8)), init_name)
-                create_csv((board_opt).astype(np.uint8), opt_name)
+                val = input("Enter your the size of training data to generate/store: ") 
+                vals = int(val)
+                generate_dataset(vals)
 
-        song = get_play_path()
-        playsound(song)
+
+        #song = get_play_path()
+        #playsound(song)
 
         exit(0)
 

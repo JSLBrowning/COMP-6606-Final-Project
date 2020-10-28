@@ -2,9 +2,10 @@ import tkinter as tk
 from tkinter.ttk import *
 from PIL import ImageTk, Image
 
+#from utils import Generate_Board
 
 class GameBoard(tk.Frame):
-    def __init__(self, parent, rows=13, columns=13, size=32, color1="lightgoldenrod", color2="white", color3="black"):
+    def __init__(self, parent, rows=7, columns=7, size=32, color1="lightgoldenrod", color2="white", color3="black"):
         '''size is the size of a square, in pixels'''
 
         self.rows = rows

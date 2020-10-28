@@ -44,8 +44,8 @@ class Map:
                 read_file.append(line)
 
         #  store first/second lines of data
-        self.column = int(read_file[0])
-        self.row = int(read_file[1])
+        self.column = int(read_file[0][0])
+        self.row = int(read_file[1][0])
 
         length = len(read_file)
 

@@ -6,6 +6,17 @@ import os
 from numpy import loadtxt, savetxt
 import csv
 import numpy as np
+import random
+
+from copy import deepcopy
+import initial as init
+import hill
+import logs
+import sys
+from operator import itemgetter
+
+
+
 
 def Generate_Board(img_dir, board):
 
@@ -41,8 +52,10 @@ def Generate_Board(img_dir, board):
 
     #Initialize Board
     root = tk.Tk()
-    board = GameBoard(root)
     row , column = gameboard.shape
+
+    board = GameBoard(root)
+    
     board.pack(side="top", fill="both", expand="true", padx=row, pady=column)
 
     #Add the respective Pieces
@@ -93,44 +106,84 @@ def Generate_Board(img_dir, board):
                 board.addpiece(_names["name{0}".format(check)], board_idx["spot{0}".format(check)], i,j)
       
     root.mainloop()
-            
-'''def make_dataset(cases):
-
-    game_map = hill.Map(map_file, configurations)
-
-    #Define Images Directory to locate board Pieces  
-    pieces_dir = get_img_path()
-
-    board_i = np.zeros([game_map.row, game_map.column])
-    board_opt = np.zeros([game_map.row, game_map.column])
-
-    print("initial board.....")
-
-    for i in range(0, game_map.column):
-        board_i[i, :] = game_map.board[game_map.column - i - 1] 
-        print(game_map.board[game_map.column - i - 1])
 
 
-    print("optimized board.....")
 
-    for i in range(0, game_map.column):
-        board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1] 
-        print(game_map.optimized_board[game_map.column - i - 1])
-'''
+def make_random_boards():
+
+    #os.chdir('../')
+    path = os.getcwd() + '/problems/temp_file.lup'
+
+    no_blk_cells = random.randint(5,15)
+    cell_vals = np.zeros([2+no_blk_cells,3], dtype = np.uint8)
+    cell_vals[0,0] = 7
+    cell_vals[1,0] = 7
+    for i in range(no_blk_cells):
+
+        x = random.randint(1,7)
+        y = random.randint(1,7)
+        idx = random.randint(0,5)
+
+        cell_vals[2+i,0] = x
+        cell_vals[2+i,1] = y
+        cell_vals[2+i,2] = idx
+
+    np.savetxt(path, cell_vals, delimiter=' ', fmt='%i') #fmt="%s")
+    
+    return path
+
+
+def generate_dataset(val):
+    
+    ######---Note: Only 7x7 boards allowed----######
+    init_dataset = np.zeros([7,7])
+    opt_dataset = np.zeros([7,7])
+
+    for idx in range(val):
+
+        #os.chdir('../')
+
+        config_file = os.getcwd() + '/source/default.cfg'
+        configurations = init.Config(config_file)
+        
+        temp_map_file = make_random_boards()
+        configurations.set_filename(temp_map_file)
+        game_map = hill.Map(temp_map_file, configurations)
+
+        init_dataset[:,:] = game_map.board
+        opt_dataset[:,:] = game_map.optimized_board
+
+
+        init_name = 'Train_Set/Initial_Sates_' + str(idx)
+        opt_name = 'Label_Set/Optimized_Data_' + str(idx) 
+        create_csv((init_dataset.astype(np.uint8)), init_name)
+        create_csv((opt_dataset).astype(np.uint8), opt_name)
+
+
+
+
 
 def get_img_path():
     path = os.getcwd() + '/images/'
     return path
 
+
+
+
 def get_play_path():
     path = os.getcwd() + '/playlist/hakuna.mp3'
-    return path     
+    return path    
+
+
 
 	
 def create_csv(data, name_str):
     # save to csv file
     save_str = os.getcwd() + '/logs/' + name_str + '.csv'
     savetxt(save_str, data.astype(np.uint8), delimiter=',')
+
+
+
 
 def get_csv(name_str):
     # save to csv file
