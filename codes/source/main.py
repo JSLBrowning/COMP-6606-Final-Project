@@ -5,17 +5,20 @@ import initial as init
 import hill
 import logs
 from board import GameBoard
-from utils import Generate_Board
+from utils import Generate_Board, get_img_path, get_play_path, create_csv, get_csv
 
 # --------imports from system------
+import os
 import sys
 from operator import itemgetter
 import numpy as np
+from playsound import playsound
+
 
 
 # read arguments
 def config_argv():
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 3:
         print("Error")
         sys.exit(0)
     # reading arguments from arg vector
@@ -29,50 +32,68 @@ def config_argv():
 # ======== ========= =========
 def main():
 
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 3:
         print("Error")
         sys.exit(0)
-    # reading arguments from arg vector
-    map_file = sys.argv[1]
-    config_file = sys.argv[2]
-    # config_file = "default2.cfg"
-    # map_file = "./maps/map2.txt"
-    configurations = init.Config(config_file)
-    configurations.set_filename(map_file)
+    
+    elif len(sys.argv) == 3 or len(sys.argv) >3:    
+        
+        # reading arguments from arg vector
+        map_file = sys.argv[1]
+        config_file = sys.argv[2]
 
-    print(configurations.annealing)
-    print(configurations.black_constraints)
-    print(configurations.log_file)
-    print(configurations.solution_file)
 
-    game_map = hill.Map(map_file, configurations)
+        # config_file = "default2.cfg"
+        # map_file = "./maps/map2.txt"
+        configurations = init.Config(config_file)
+        configurations.set_filename(map_file)
 
-    #Define Images Directory to locate board Pieces
-    pieces_dir = '/home/rob/Desktop/Laptop_rob/Work/Auburn/Artificial_Intelligence/'\
-                'Final_Project/GitHub/COMP-6606-Artificial-Intelligence-Final-Project/codes/images/'
-    board_i = np.zeros([game_map.row, game_map.column])
-    board_opt = np.zeros([game_map.row, game_map.column])
+        print(configurations.annealing)
+        print(configurations.black_constraints)
+        print(configurations.log_file)
+        print(configurations.solution_file)
 
-    print("initial board.....")
+        game_map = hill.Map(map_file, configurations)
 
-    for i in range(0, game_map.column):
-        board_i[i, :] = game_map.board[game_map.column - i - 1] 
-        print(game_map.board[game_map.column - i - 1])
+        #Define Images Directory to locate board Pieces  
+        pieces_dir = get_img_path()
 
-    #Generate Initialized Board
-    Generate_Board(pieces_dir, board_i)
+        board_i = np.zeros([game_map.row, game_map.column], dtype = np.uint8)
+        board_opt = np.zeros([game_map.row, game_map.column], dtype = np.uint8)
 
-    print("optimized board.....")
+        print("initial board.....")
 
-    for i in range(0, game_map.column):
-        board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1] 
-        print(game_map.optimized_board[game_map.column - i - 1])
+        for i in range(0, game_map.column):
+            board_i[i, :] = game_map.board[game_map.column - i - 1] 
+            print(game_map.board[game_map.column - i - 1])
 
-    #Generate Interactive Optimized Board
-    Generate_Board(pieces_dir, board_opt)    
 
-    exit(0)
+        print("optimized board.....")
 
+        for i in range(0, game_map.column):
+            board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1] 
+            print(game_map.optimized_board[game_map.column - i - 1])   
+
+
+        # Check Length of args - If more than 3 provided check if display board of make dataset
+        if len(sys.argv) > 3:
+            #Generate Display for Boards if argv[3] is --display
+            if "--display" in sys.argv:
+                Generate_Board(pieces_dir, board_i)
+                Generate_Board(pieces_dir, board_opt) 
+
+            #Generate cvs files for dataset if argv[3] is --dataset
+            if "--dataset" in sys.argv:
+
+                init_name = 'Initial_Sates'
+                opt_name = 'Optimized_Data'
+                create_csv((board_i.astype(np.uint8)), init_name)
+                create_csv((board_opt).astype(np.uint8), opt_name)
+
+        #song = get_play_path()
+        #playsound(song)
+
+        exit(0)
 
 if __name__ == "__main__":
     main()

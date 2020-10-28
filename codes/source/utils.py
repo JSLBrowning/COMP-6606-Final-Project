@@ -2,7 +2,10 @@ import tkinter as tk
 from tkinter.ttk import *
 from PIL import ImageTk, Image
 from board import GameBoard
-
+import os
+from numpy import loadtxt, savetxt
+import csv
+import numpy as np
 
 def Generate_Board(img_dir, board):
 
@@ -91,6 +94,47 @@ def Generate_Board(img_dir, board):
       
     root.mainloop()
             
+'''def make_dataset(cases):
+
+    game_map = hill.Map(map_file, configurations)
+
+    #Define Images Directory to locate board Pieces  
+    pieces_dir = get_img_path()
+
+    board_i = np.zeros([game_map.row, game_map.column])
+    board_opt = np.zeros([game_map.row, game_map.column])
+
+    print("initial board.....")
+
+    for i in range(0, game_map.column):
+        board_i[i, :] = game_map.board[game_map.column - i - 1] 
+        print(game_map.board[game_map.column - i - 1])
 
 
+    print("optimized board.....")
+
+    for i in range(0, game_map.column):
+        board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1] 
+        print(game_map.optimized_board[game_map.column - i - 1])
+'''
+
+def get_img_path():
+    path = os.getcwd() + '/images/'
+    return path
+
+def get_play_path():
+    path = os.getcwd() + '/playlist/hakuna.mp3'
+    return path     
+
+	
+def create_csv(data, name_str):
+    # save to csv file
+    save_str = os.getcwd() + '/logs/' + name_str + '.csv'
+    savetxt(save_str, data.astype(np.uint8), delimiter=',')
+
+def get_csv(name_str):
+    # save to csv file
+    load_str = os.getcwd() + '/logs/' + name_str + '.csv'
+    data = loadtxt(load_str, delimiter=',')
+    return data
 
