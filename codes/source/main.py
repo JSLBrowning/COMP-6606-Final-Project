@@ -4,6 +4,8 @@ from copy import deepcopy
 import initial as init
 import hill
 import logs
+from board import GameBoard
+from utils import Generate_Board
 
 # --------imports from system------
 import sys
@@ -45,15 +47,29 @@ def main():
 
     game_map = hill.Map(map_file, configurations)
 
+    #Define Images Directory to locate board Pieces
+    pieces_dir = '/home/rob/Desktop/Laptop_rob/Work/Auburn/Artificial_Intelligence/'\
+                'Final_Project/GitHub/COMP-6606-Artificial-Intelligence-Final-Project/codes/images/'
+    board_i = np.zeros([game_map.row, game_map.column])
+    board_opt = np.zeros([game_map.row, game_map.column])
+
     print("initial board.....")
 
     for i in range(0, game_map.column):
+        board_i[i, :] = game_map.board[game_map.column - i - 1] 
         print(game_map.board[game_map.column - i - 1])
+
+    #Generate Initialized Board
+    Generate_Board(pieces_dir, board_i)
 
     print("optimized board.....")
 
     for i in range(0, game_map.column):
+        board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1] 
         print(game_map.optimized_board[game_map.column - i - 1])
+
+    #Generate Interactive Optimized Board
+    Generate_Board(pieces_dir, board_opt)    
 
     exit(0)
 
