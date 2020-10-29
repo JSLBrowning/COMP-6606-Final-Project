@@ -88,8 +88,8 @@ def main():
             #Generate Display for Boards if argv[3] is --display
             if "--display" in sys.argv:
                 Generate_Board(pieces_dir, board_i)
-                Generate_Board(pieces_dir, board_opt) 
-
+                Generate_Board(pieces_dir, board_opt)
+            
             #Generate cvs files for dataset if argv[3] is --dataset
             if "--dataset" in sys.argv:
 
