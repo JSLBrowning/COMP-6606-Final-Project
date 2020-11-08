@@ -1,7 +1,7 @@
 # COMP-6606-Artificial-Intelligence-Final-Project
 The purpose of this project was to apply the techniques we learned in Auburn University's COMP 6600/6606 Artificial Intelligence course to a new problem that we were interested in.
 
-We chose to focus on the [Light Up puzzle](https://en.wikipedia.org/wiki/Light_Up_(puzzle)).
+We chose to focus on the [Light Up puzzle](https://en.wikipedia.org/wiki/Light_Up_(puzzle)), and solved it using hill climbing, simulated annealing, and a deep neural network.
 
 # Running Codes #
 cd codes

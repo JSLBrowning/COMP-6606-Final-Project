@@ -1,7 +1,7 @@
 # import from outside functions
 import configparser
 import random
-from copy import deepcopy
+# from copy import deepcopy
 from datetime import datetime
 
 # -------- constants  --------

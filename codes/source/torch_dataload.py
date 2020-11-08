@@ -1,5 +1,5 @@
 import numpy as np
-import csv 
+import csv
 import os
 import pandas as pd
 from numpy import loadtxt, savetxt
@@ -11,8 +11,7 @@ import torch
 class Boardloader(Dataset):
     """Board Initialization dataset."""
 
-    def __init__(self,train_dir, label_dir, transform=None):
-        
+    def __init__(self, train_dir, label_dir, transform=None):
         """
         Args:
             transform (callable, optional): Optional transform to be applied
@@ -26,7 +25,6 @@ class Boardloader(Dataset):
         return 100000
 
     def __getitem__(self, idx):
-    
         # save to csv file
         load_str_train = self.train_dir + str(idx) + '.csv'
         load_str_label = self.label_dir + str(idx) + '.csv'
@@ -35,11 +33,9 @@ class Boardloader(Dataset):
 
         train_data = train_data.reshape(1, train_data.shape[0], train_data.shape[1])
         label_data = label_data.reshape(1, label_data.shape[0], label_data.shape[1])
-        
+
         train_data = torch.tensor(train_data)
         label_data = torch.tensor(label_data)
-        sample = {'initial': train_data, 'labels': label_data}        
-
+        sample = {'initial': train_data, 'labels': label_data}
 
         return sample
-    

@@ -23,7 +23,6 @@ import numpy as np
 from playsound import playsound
 
 
-
 # read arguments
 def config_argv():
     if len(sys.argv) < 3:
@@ -39,17 +38,15 @@ def config_argv():
 # ======== Main body =========
 # ======== ========= =========
 def main():
-
     if len(sys.argv) < 3:
         print("Error")
         sys.exit(0)
-    
-    if len(sys.argv) == 3 or len(sys.argv) > 3:    
-        
+
+    if len(sys.argv) == 3 or len(sys.argv) > 3:
+
         # reading arguments from arg vector
         map_file = sys.argv[1]
         config_file = sys.argv[2]
-
 
         # config_file = "default2.cfg"
         # map_file = "./maps/map2.txt"
@@ -63,45 +60,42 @@ def main():
 
         game_map = hill.Map(map_file, configurations)
 
-        #Define Images Directory to locate board Pieces  
+        # Define Images Directory to locate board Pieces
         pieces_dir = get_img_path()
 
-        board_i = np.zeros([game_map.row, game_map.column], dtype = np.uint8)
-        board_opt = np.zeros([game_map.row, game_map.column], dtype = np.uint8)
+        board_i = np.zeros([game_map.row, game_map.column], dtype=np.uint8)
+        board_opt = np.zeros([game_map.row, game_map.column], dtype=np.uint8)
 
         print("initial board.....")
 
         for i in range(0, game_map.column):
-            board_i[i, :] = game_map.board[game_map.column - i - 1] 
+            board_i[i, :] = game_map.board[game_map.column - i - 1]
             print(game_map.board[game_map.column - i - 1])
-
 
         print("optimized board.....")
 
         for i in range(0, game_map.column):
-            board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1] 
-            print(game_map.optimized_board[game_map.column - i - 1])   
+            board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1]
+            print(game_map.optimized_board[game_map.column - i - 1])
 
-
-        # Check Length of args - If more than 3 provided check if display board of make dataset
+            # Check Length of args - If more than 3 provided check if display board of make dataset
         if len(sys.argv) > 3:
-            #Generate Display for Boards if argv[3] is --display
+            # Generate Display for Boards if argv[3] is --display
             if "--display" in sys.argv:
                 Generate_Board(pieces_dir, board_i)
                 Generate_Board(pieces_dir, board_opt)
-            
-            #Generate cvs files for dataset if argv[3] is --dataset
-            if "--dataset" in sys.argv:
 
-                val = input("Enter your the size of training data to generate/store: ") 
+            # Generate cvs files for dataset if argv[3] is --dataset
+            if "--dataset" in sys.argv:
+                val = input("Enter your the size of training data to generate/store: ")
                 vals = int(val)
                 generate_dataset(vals)
 
-
-        #song = get_play_path()
-        #playsound(song)
+        # song = get_play_path()
+        # playsound(song)
 
         exit(0)
+
 
 if __name__ == "__main__":
     main()
