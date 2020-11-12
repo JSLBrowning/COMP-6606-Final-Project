@@ -107,7 +107,7 @@ def Generate_Board(img_dir, board):
 
 def make_random_boards():
     # os.chdir('../')
-    path = os.getcwd() + '/problems/temp_file.lup'
+    path = os.getcwd() + '/puzzles/temp_file.lup'
 
     no_blk_cells = random.randint(5, 15)
     cell_vals = np.zeros([2 + no_blk_cells, 3], dtype=np.uint8)
