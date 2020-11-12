@@ -16,10 +16,14 @@ class Map:
     optimized_board = []
     black_cells = []
     available_cells = []
+    bulb_running = []
+    board_running = []
 
     def __init__(self, map_file, config):
         self.board = []
         self.available_cells = []
+        self.bulb_running = []
+        self.board_running = []
         self.size = 0
         self.row = 0
         self.column = 0
@@ -29,6 +33,7 @@ class Map:
         self.original_board = self.load_board()
         self.board = self.original_board
         self.optimized_board = self.validation_board()
+        self.board_running = deepcopy(self.optimized_board)
         self.available_cells = self.set_available_cells()
 
     # read the map data and store it
@@ -44,8 +49,8 @@ class Map:
                 read_file.append(line)
 
         #  store first/second lines of data
-        self.column = int(read_file[0][0])
-        self.row = int(read_file[1][0])
+        self.column = int(read_file[0])
+        self.row = int(read_file[1])
 
         length = len(read_file)
 
@@ -67,6 +72,7 @@ class Map:
         return board
 
     def load_board(self):
+
         new_board = self.create_board()
         numbers = len(self.black_cells)
         for i in range(0, numbers):
@@ -84,6 +90,42 @@ class Map:
                 if self.optimized_board[i][j] == init.CELL_EMPTY:
                     cells.append([i, j])
         return cells
+
+    # this function will insert the bulbs to meet the requirement of black cell adjacency
+    def set_start_map(self):
+        cells_for_inserting = deepcopy(self.available_cells)
+        for i in range(0, len(self.black_cells)):
+            bulb_number = self.black_cells[i][2]
+            if bulb_number > 0 and bulb_number != 5:
+                neighbors = []
+                # 1. upper -- row + 1
+                upper = [self.black_cells[i][1], self.black_cells[i][0] - 1]
+                if upper in cells_for_inserting:
+                    neighbors.append(upper)
+                    cells_for_inserting.remove(upper)
+                # 2. down:-- row - 1
+                down = [self.black_cells[i][1] - 2,  self.black_cells[i][0] - 1]
+                if down in cells_for_inserting:
+                    neighbors.append(down)
+                    cells_for_inserting.remove(down)
+                # 3. down:-- column + 1
+                right = [self.black_cells[i][1] - 1, self.black_cells[i][0]]
+                if right in cells_for_inserting:
+                    neighbors.append(right)
+                    cells_for_inserting.remove(right)
+                # 4. left:-- column - 1
+                left = [self.black_cells[i][1] - 1, self.black_cells[i][0] - 2]
+                if left in cells_for_inserting:
+                    neighbors.append(left)
+                    cells_for_inserting.remove(left)
+
+                if neighbors:
+                    if len(neighbors) < bulb_number:
+                        bulb_number = len(neighbors)
+                    bulb_inserting = random.sample(neighbors, k=bulb_number)
+                    self.bulb_running.append(bulb_inserting)
+                    for x in range(0, bulb_number):
+                        self.board_running[bulb_inserting[x][0]][bulb_inserting[x][1]] = init.CELL_BULB
 
 
     # initialize the map under validation
@@ -421,3 +463,4 @@ def check_bulb_shining(puzzle_map, row, col):
                 start = j
 
     return conflict
+
