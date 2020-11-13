@@ -464,7 +464,7 @@ def add_one_bulb(board: Map):
         my_board.fitness = evaluate_puzzle_map(my_board)
         boards.append(my_board)
     boards.sort(key=operator.attrgetter('fitness'), reverse=True)
-    print(f'Local optimal fitness by adding a bulb: {boards[0].fitness}')
+    # print(f'Local optimal fitness by adding a bulb: {boards[0].fitness}')
 
     return boards[0]
 
@@ -479,7 +479,7 @@ def reduce_one_bulb(board: Map):
         my_board.fitness = evaluate_puzzle_map(my_board)
         boards.append(my_board)
     boards.sort(key=operator.attrgetter('fitness'), reverse=True)
-    print(f'Local optimal fitness by reducing a bulb: {boards[0].fitness}')
+    # print(f'Local optimal fitness by reducing a bulb: {boards[0].fitness}')
 
     return boards[0]
 
@@ -498,7 +498,7 @@ def moving_one_bulb(board: Map):
         my_board.fitness = evaluate_puzzle_map(my_board)
         boards.append(my_board)
     boards.sort(key=operator.attrgetter('fitness'), reverse=True)
-    print(f'Local optimal fitness by moving a bulb: {boards[0].fitness}')
+    # print(f'Local optimal fitness by moving a bulb: {boards[0].fitness}')
 
     return boards[0]
 
@@ -508,5 +508,6 @@ def hill_climb(board: Map):
     results = [board, add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
 
     results.sort(key=operator.attrgetter('fitness'), reverse=True)
+    print(f'The current local optimal: {results[0].fitness}')
 
     return results[0]
