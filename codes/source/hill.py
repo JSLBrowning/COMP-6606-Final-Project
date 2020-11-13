@@ -512,6 +512,6 @@ def hill_climb(board: Map):
     results = [add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
 
     results.sort(key=operator.attrgetter('fitness'), reverse=True)
-    print(f'The current local optimal: {results[0].fitness}')
+    # print(f'The current local optimal: {results[0].fitness}')
 
     return results[0]

@@ -91,6 +91,7 @@ def main():
         running_board = deepcopy(game_map)
         while not terminate:
             running_board = hill.hill_climb(running_board)
+            print(f'Evaluations: {number_evals}   The local optimal: {running_board.fitness}')
             number_evals += 30
             if number_evals > 10000:
                 terminate = True
@@ -99,7 +100,12 @@ def main():
 
         print(f'The global optimal: {running_board.fitness}')
 
-
+        # print out the global optimal
+        board = running_board.optimized_board
+        board = hill.insert_bulbs(board, running_board.bulb_running)
+        hill.check_bulb_shining(board, running_board.row, running_board.column)
+        for i in range(0, running_board.row):
+            print(board[i])
 
         exit(0)
 
