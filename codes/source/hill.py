@@ -1,5 +1,6 @@
-
 # import from project functions
+import operator
+
 import initial as init
 
 # import from outside functions
@@ -12,6 +13,8 @@ class Map:
     size = 0
     column = 0
     row = 0
+    total_available_cells = 0
+    fitness = 0
     board = []
     optimized_board = []
     black_cells = []
@@ -27,6 +30,7 @@ class Map:
         self.size = 0
         self.row = 0
         self.column = 0
+        self.fitness = 0
 
         self.file = map_file
         self.black_cells = self.read_map()
@@ -35,6 +39,7 @@ class Map:
         self.optimized_board = self.validation_board()
         self.board_running = deepcopy(self.optimized_board)
         self.available_cells = self.set_available_cells()
+        self.total_available_cells = self.row * self.column - len(self.black_cells)
 
     # read the map data and store it
     def read_map(self):
@@ -98,21 +103,25 @@ class Map:
             bulb_number = self.black_cells[i][2]
             if bulb_number > 0 and bulb_number != 5:
                 neighbors = []
+
                 # 1. upper -- row + 1
                 upper = [self.black_cells[i][1], self.black_cells[i][0] - 1]
                 if upper in cells_for_inserting:
                     neighbors.append(upper)
                     cells_for_inserting.remove(upper)
+
                 # 2. down:-- row - 1
-                down = [self.black_cells[i][1] - 2,  self.black_cells[i][0] - 1]
+                down = [self.black_cells[i][1] - 2, self.black_cells[i][0] - 1]
                 if down in cells_for_inserting:
                     neighbors.append(down)
                     cells_for_inserting.remove(down)
+
                 # 3. down:-- column + 1
                 right = [self.black_cells[i][1] - 1, self.black_cells[i][0]]
                 if right in cells_for_inserting:
                     neighbors.append(right)
                     cells_for_inserting.remove(right)
+
                 # 4. left:-- column - 1
                 left = [self.black_cells[i][1] - 1, self.black_cells[i][0] - 2]
                 if left in cells_for_inserting:
@@ -123,10 +132,10 @@ class Map:
                     if len(neighbors) < bulb_number:
                         bulb_number = len(neighbors)
                     bulb_inserting = random.sample(neighbors, k=bulb_number)
-                    self.bulb_running.append(bulb_inserting)
-                    for x in range(0, bulb_number):
-                        self.board_running[bulb_inserting[x][0]][bulb_inserting[x][1]] = init.CELL_BULB
 
+                    for x in range(0, bulb_number):
+                        self.bulb_running.append(bulb_inserting[x])
+                        self.board_running[bulb_inserting[x][0]][bulb_inserting[x][1]] = init.CELL_BULB
 
     # initialize the map under validation
     # all cells will fill up by bulbs if only unique way to do it
@@ -258,23 +267,28 @@ def set_random_bulbs(puzzle_map, white_cells, bulb_number):
 # 1. black cells
 # 2. shining cells
 # 3. bulb cells
-def evaluate_puzzle_map(puzzle_map, black_cells, bulb_cells, config):
-    number_cells_black = len(black_cells) - 1
+def evaluate_puzzle_map(board: Map):
+    my_board = deepcopy(board.optimized_board)
+    black_cells = deepcopy(board.black_cells)
+    bulb_cells = deepcopy(board.bulb_running)
+
+    number_cells_black = len(black_cells)
     number_cells_empty = 0
     number_cells_bulb = 0
 
-    cols = black_cells[0][0]
-    rows = black_cells[0][1]
+    cols = board.column
+    rows = board.row
 
     available_placement = 0
     for i in range(0, rows):
         for j in range(0, cols):
-            if puzzle_map[i][j] == init.CELL_EMPTY:
+            if my_board[i][j] == init.CELL_EMPTY:
                 available_placement += 1
 
-    puzzle = insert_bulbs(puzzle_map, bulb_cells)
+    puzzle = insert_bulbs(my_board, bulb_cells)
 
     fitness_shining_conflict = check_bulb_shining(puzzle, rows, cols)
+
     for i in range(0, rows):
         for j in range(0, cols):
             if puzzle[i][j] == init.CELL_BULB:
@@ -289,44 +303,16 @@ def evaluate_puzzle_map(puzzle_map, black_cells, bulb_cells, config):
 
     # penalty function
     total_conflict = fitness_shining_conflict + fitness_black_conflict
-    total_available_cell = rows * cols - number_cells_black
-    shrink = config["penalty_shrink_factor"]
-    minus = config["penalty_minus_factor"]
-    if total_conflict > available_placement:
-        total_conflict = available_placement - 1
-    minor_factor = (available_placement - total_conflict * minus) / available_placement
-    if minor_factor < 0:
-        minor_factor = 0
-    evaluation_fitness = int(100 * number_cells_shining * minor_factor / total_available_cell)
-    original_fitness = int(100 * number_cells_shining / total_available_cell)
-    if total_conflict:
-        if config["fitness_function"] == "original":
-            original_fitness = evaluation_fitness
-            evaluation_fitness = 0
-        else:
-            evaluation_fitness = int(evaluation_fitness * shrink)
 
-    puzzle_eval_data = {
-        "black_cells": number_cells_black,
-        "white_cells": rows * cols - number_cells_black,
-        "empty_cells": number_cells_empty,
-        "total_conflict": total_conflict,
-        "shining_conflict": fitness_shining_conflict,
-        "black_conflict": fitness_black_conflict,
-        "domination_count": 0,
-        "front_line": 0,
-        "dominates": [],
-        "original_fitness": original_fitness,
-        "evaluation_fitness": evaluation_fitness,
-        "number_cells_shining": number_cells_shining,
-        "bulb_cells": len(bulb_cells),
-        "bulb_cells_total": number_cells_bulb,
-        "bulbs": bulb_cells
-    }
-    #    print(puzzle_eval_data)
-    #    breakpoint()
+    evaluation_fitness = int(100 * number_cells_shining / board.total_available_cells) - total_conflict * 3
 
-    return puzzle_eval_data
+    # print(f'shining bulbs:{number_cells_shining}  Total conflicts:{total_conflict}')
+    # print(f'Evaluation fitness: {evaluation_fitness}')
+    # print(f'board.total_available_cells: {board.total_available_cells}')
+    # print(f'fitness_shining_conflict: {fitness_shining_conflict}')
+    # print(f'fitness_black_conflict: {fitness_black_conflict}')
+
+    return evaluation_fitness
 
 
 # put the bulb array into puzzle map
@@ -464,3 +450,63 @@ def check_bulb_shining(puzzle_map, row, col):
 
     return conflict
 
+
+# adding a bulb and generate 10 neighbors to choose a local optimal
+def add_one_bulb(board: Map):
+    possible_cells = deepcopy(board.available_cells)
+    for i in range(0, len(board.bulb_running)):
+        possible_cells.remove(board.bulb_running[i])
+    boards = []
+
+    for i in range(0, 10):
+        my_board = deepcopy(board)
+        my_board.bulb_running.append(random.choice(possible_cells))
+        my_board.fitness = evaluate_puzzle_map(my_board)
+        boards.append(my_board)
+    boards.sort(key=operator.attrgetter('fitness'), reverse=True)
+    print(f'Local optimal fitness by adding a bulb: {boards[0].fitness}')
+
+    return boards[0]
+
+
+# reduce a bulb and generate 10 neighbors to choose a local optimal
+def reduce_one_bulb(board: Map):
+    boards = []
+
+    for i in range(0, 10):
+        my_board = deepcopy(board)
+        my_board.bulb_running.remove(random.choice(my_board.bulb_running))
+        my_board.fitness = evaluate_puzzle_map(my_board)
+        boards.append(my_board)
+    boards.sort(key=operator.attrgetter('fitness'), reverse=True)
+    print(f'Local optimal fitness by reducing a bulb: {boards[0].fitness}')
+
+    return boards[0]
+
+
+# moving a bulb to another empty cell, generate 10 neighbors to choose a local optimal
+def moving_one_bulb(board: Map):
+    possible_cells = deepcopy(board.available_cells)
+    for i in range(0, len(board.bulb_running)):
+        possible_cells.remove(board.bulb_running[i])
+    boards = []
+
+    for i in range(0, 10):
+        my_board = deepcopy(board)
+        my_board.bulb_running.remove(random.choice(my_board.bulb_running))
+        my_board.bulb_running.append(random.choice(possible_cells))
+        my_board.fitness = evaluate_puzzle_map(my_board)
+        boards.append(my_board)
+    boards.sort(key=operator.attrgetter('fitness'), reverse=True)
+    print(f'Local optimal fitness by moving a bulb: {boards[0].fitness}')
+
+    return boards[0]
+
+
+# hill climb: choose best one of adding/removing/moving a bulb
+def hill_climb(board: Map):
+    results = [board, add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
+
+    results.sort(key=operator.attrgetter('fitness'), reverse=True)
+
+    return results[0]

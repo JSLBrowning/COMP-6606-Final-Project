@@ -83,6 +83,24 @@ def main():
         for i in range(0, game_map.column):
             print(game_map.board_running[game_map.column - i - 1])
 
+        fitness = hill.evaluate_puzzle_map(game_map)
+        print(f'Initial fitness: {fitness}')
+
+        terminate = False
+        number_evals = 0
+        running_board = deepcopy(game_map)
+        while not terminate:
+            running_board = hill.hill_climb(running_board)
+            number_evals += 30
+            if number_evals > 10000:
+                terminate = True
+            if running_board.fitness == 100:
+                terminate = True
+
+        print(f'The global optimal: {running_board.fitness}')
+
+
+
         exit(0)
 
             # Check Length of args - If more than 3 provided check if display board of make dataset
