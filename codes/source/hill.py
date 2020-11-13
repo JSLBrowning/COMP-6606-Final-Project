@@ -460,7 +460,8 @@ def add_one_bulb(board: Map):
 
     for i in range(0, 10):
         my_board = deepcopy(board)
-        my_board.bulb_running.append(random.choice(possible_cells))
+        if possible_cells:
+            my_board.bulb_running.append(random.choice(possible_cells))
         my_board.fitness = evaluate_puzzle_map(my_board)
         boards.append(my_board)
     boards.sort(key=operator.attrgetter('fitness'), reverse=True)
@@ -475,7 +476,8 @@ def reduce_one_bulb(board: Map):
 
     for i in range(0, 10):
         my_board = deepcopy(board)
-        my_board.bulb_running.remove(random.choice(my_board.bulb_running))
+        if my_board.bulb_running:
+            my_board.bulb_running.remove(random.choice(my_board.bulb_running))
         my_board.fitness = evaluate_puzzle_map(my_board)
         boards.append(my_board)
     boards.sort(key=operator.attrgetter('fitness'), reverse=True)
@@ -493,8 +495,10 @@ def moving_one_bulb(board: Map):
 
     for i in range(0, 10):
         my_board = deepcopy(board)
-        my_board.bulb_running.remove(random.choice(my_board.bulb_running))
-        my_board.bulb_running.append(random.choice(possible_cells))
+        if my_board.bulb_running:
+            my_board.bulb_running.remove(random.choice(my_board.bulb_running))
+        if possible_cells:
+            my_board.bulb_running.append(random.choice(possible_cells))
         my_board.fitness = evaluate_puzzle_map(my_board)
         boards.append(my_board)
     boards.sort(key=operator.attrgetter('fitness'), reverse=True)
@@ -505,7 +509,7 @@ def moving_one_bulb(board: Map):
 
 # hill climb: choose best one of adding/removing/moving a bulb
 def hill_climb(board: Map):
-    results = [board, add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
+    results = [add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
 
     results.sort(key=operator.attrgetter('fitness'), reverse=True)
     print(f'The current local optimal: {results[0].fitness}')
