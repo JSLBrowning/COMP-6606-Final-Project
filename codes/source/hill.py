@@ -1,4 +1,5 @@
 # import from project functions
+import math
 import operator
 
 import initial as init
@@ -22,11 +23,14 @@ class Map:
     bulb_running = []
     board_running = []
 
+    result_log = []
+
     def __init__(self, map_file, config):
         self.board = []
         self.available_cells = []
         self.bulb_running = []
         self.board_running = []
+        self.result_log = []
         self.size = 0
         self.row = 0
         self.column = 0
@@ -36,7 +40,10 @@ class Map:
         self.black_cells = self.read_map()
         self.original_board = self.load_board()
         self.board = self.original_board
-        self.optimized_board = self.validation_board()
+        if config.black_constraints:
+            self.optimized_board = self.validation_board()
+        else:
+            self.optimized_board = self.original_board
         self.board_running = deepcopy(self.optimized_board)
         self.available_cells = self.set_available_cells()
         self.total_available_cells = self.row * self.column - len(self.black_cells)
@@ -67,6 +74,9 @@ class Map:
                 puzzle[i - 2].append(int(message[j]))
 
         return puzzle
+
+    def log_update(self, run, fitness):
+        self.result_log.append([run, fitness])
 
     def create_board(self):
         board = []  # array will be returned
@@ -508,10 +518,27 @@ def moving_one_bulb(board: Map):
 
 
 # hill climb: choose best one of adding/removing/moving a bulb
-def hill_climb(board: Map):
+def hill_climb(board: Map, configuration):
     results = [add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
 
     results.sort(key=operator.attrgetter('fitness'), reverse=True)
     # print(f'The current local optimal: {results[0].fitness}')
 
+    if results[0].fitness <= board.fitness:
+        if not configuration.annealing:
+            results[0] = board
+        else:
+            results[0] = anneal(board, results[0], configuration.annealing_temp)
+
     return results[0]
+
+
+# annealing algorithm
+def anneal(f1, f2, temp):
+    p = random.uniform(0, 1)
+    d = -abs(f1.fitness - f2.fitness) / temp
+    annealing = math.exp(d)
+    if p > annealing:
+        return f2
+    return f1
+

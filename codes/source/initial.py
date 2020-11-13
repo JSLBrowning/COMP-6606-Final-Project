@@ -33,6 +33,7 @@ CELL_LIGHT = 8
 class Config:
     black_constraints = False
     annealing = False
+    annealing_temp = 0
     runs = 0
     constance = 0
     evaluation_number = 0
@@ -46,8 +47,9 @@ class Config:
         self.default = configparser.ConfigParser()
         self.default.sections()
         self.default.read(config_file)
-        self.black_constraints = self.default["default"]["black_constraints"]
-        self.annealing = self.default["default"]["annealing"]
+        self.black_constraints = self.default["default"]["unique_optimize"].lower() in ['true']
+        self.annealing = self.default["default"]["annealing"].lower() in ['true']
+        self.annealing_temp = float(self.default["default"]["annealing_temp"])
         self.evaluation_number = int(self.default["default"]["termination_evaluation"])
         self.runs = int(self.default["default"]["number_runs"])
         self.random_seed = self.default["default"]["random_seed"]
@@ -93,6 +95,15 @@ class Config:
         self.solution_file = self.solution_path + text_word[len(text_word) - 1]
         # print(self.log_file)
         # print(self.solution_file)
+
+    def print_initialization(self):
+
+        print(f'Simulated Annealing:{self.annealing}')
+        print(f'Optimal board: {self.black_constraints}')
+        print(f'Number of evaluations:{self.evaluation_number}')
+        print(f'Number of runs:{self.runs}')
+        print(f'Log file: {self.log_file}')
+        print(f'solution file:{self.solution_file}')
 
 
 

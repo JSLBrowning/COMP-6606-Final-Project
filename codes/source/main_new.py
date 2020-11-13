@@ -7,7 +7,10 @@
 
 
 # import from project functions
+import multiprocessing
+from multiprocessing import Process
 from copy import deepcopy
+import time
 
 import initial as init
 import hill
@@ -34,6 +37,56 @@ def config_argv():
     print(problem_filepath, config_filepath)
 
 
+# a single run of hill climbing
+def single_run(run, game_map: hill.Map, configuration: init.Config, result):
+    print(f'run:....{run}')
+
+    fitness = hill.evaluate_puzzle_map(game_map)
+    print(f'Initial fitness: {fitness}')
+
+    # game_map.log_update(0, fitness)
+
+    logs = [0, fitness]
+
+    terminate = False
+    number_evals = 0
+    running_board = deepcopy(game_map)
+    non_fitness_improvement = 0
+
+    local_optima = running_board
+    while not terminate:
+        number_evals += 30
+
+        running_board = hill.hill_climb(running_board, configuration)
+        print(f'Evaluations: {number_evals}   The current fitness: {running_board.fitness}')
+
+        # running_board.log_update(number_evals, running_board.fitness)
+        logs.append([number_evals, running_board.fitness])
+
+        if number_evals > configuration.evaluation_number:
+            # print("Terminated by number of evals")
+            terminate = True
+        if running_board.fitness == 100:
+            # print("Terminated by 100 fitness")
+            terminate = True
+
+        if local_optima.fitness < running_board.fitness:
+            local_optima = running_board
+            non_fitness_improvement = 0
+        else:
+            non_fitness_improvement += 1
+
+        # if 100 iteration has not improved the fitness, then restart
+        # if non_fitness_improvement > 100:
+        #     non_fitness_improvement = 0
+        #     print("No improvement 100 iterations, restarting...")
+        #     running_board = deepcopy(game_map)
+    local_optima.result_log = logs
+    result[run] = local_optima
+
+    return local_optima
+
+
 # ======== ========= =========
 # ======== Main body =========
 # ======== ========= =========
@@ -48,15 +101,9 @@ def main():
         map_file = sys.argv[1]
         config_file = sys.argv[2]
 
-        # config_file = "default2.cfg"
-        # map_file = "./maps/map2.txt"
         configurations = init.Config(config_file)
         configurations.set_filename(map_file)
-
-        print(configurations.annealing)
-        print(configurations.black_constraints)
-        print(configurations.log_file)
-        print(configurations.solution_file)
+        configurations.print_initialization()
 
         game_map = hill.Map(map_file, configurations)
 
@@ -67,13 +114,11 @@ def main():
         board_opt = np.zeros([game_map.row, game_map.column], dtype=np.uint8)
 
         print("initial board.....")
-
         for i in range(0, game_map.column):
             board_i[i, :] = game_map.board[game_map.column - i - 1]
             print(game_map.board[game_map.column - i - 1])
 
         print("optimized board.....")
-
         for i in range(0, game_map.column):
             board_opt[i, :] = game_map.optimized_board[game_map.column - i - 1]
             print(game_map.optimized_board[game_map.column - i - 1])
@@ -83,31 +128,45 @@ def main():
         for i in range(0, game_map.column):
             print(game_map.board_running[game_map.column - i - 1])
 
-        fitness = hill.evaluate_puzzle_map(game_map)
-        print(f'Initial fitness: {fitness}')
+        # starting multiple processing.......
+        start = time.perf_counter()
 
-        terminate = False
-        number_evals = 0
-        running_board = deepcopy(game_map)
-        while not terminate:
-            running_board = hill.hill_climb(running_board)
-            print(f'Evaluations: {number_evals}   The local optimal: {running_board.fitness}')
-            number_evals += 30
-            if number_evals > 10000:
-                terminate = True
-            if running_board.fitness == 100:
-                terminate = True
+        processes = []
+        manager = multiprocessing.Manager()
+        all_logs = manager.dict()
+        for i in range(0, configurations.runs):
+            processes.append([])
+            processes[i] = Process(target=single_run, args=(i, game_map, configurations, all_logs))
+            processes[i].start()
 
-        print(f'The global optimal: {running_board.fitness}')
+        for i in range(0, configurations.runs):
+            processes[i].join()
 
+        global_optima = all_logs[0]
+        for i in range(0, len(all_logs)):
+            print(f'run: {i}')
+            # logs.logs_write(configurations.log_file, i, all_logs[i].result_log)
+            if global_optima.fitness < all_logs[i].fitness:
+                global_optima = all_logs[i]
+            for j in range(0, len(all_logs[i].result_log)):
+                print(all_logs[i].result_log[j])
+
+        print(f'global optimal fitness: {global_optima.fitness}')
         # print out the global optimal
-        board = running_board.optimized_board
-        board = hill.insert_bulbs(board, running_board.bulb_running)
-        hill.check_bulb_shining(board, running_board.row, running_board.column)
-        for i in range(0, running_board.row):
+        board = global_optima.optimized_board
+        board = hill.insert_bulbs(board, global_optima.bulb_running)
+        hill.check_bulb_shining(board, global_optima.row, global_optima.column)
+        for i in range(0, global_optima.row):
             print(board[i])
 
+        finish = time.perf_counter()
+        print(f'Finished in {round(finish - start, 2)} second(s)')
+
         exit(0)
+
+        # a single run for the puzzle
+        # return a local optima
+        # local_optima = single_run(game_map, configurations)
 
             # Check Length of args - If more than 3 provided check if display board of make dataset
         if len(sys.argv) > 3:
