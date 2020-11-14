@@ -45,8 +45,7 @@ def single_run(run, game_map: hill.Map, configuration: init.Config, result):
     print(f'Initial fitness: {fitness}')
 
     # game_map.log_update(0, fitness)
-
-    logs = [0, fitness]
+    logs_running = [[0, fitness]]
 
     terminate = False
     number_evals = 0
@@ -61,7 +60,7 @@ def single_run(run, game_map: hill.Map, configuration: init.Config, result):
         print(f'Evaluations: {number_evals}   The current fitness: {running_board.fitness}')
 
         # running_board.log_update(number_evals, running_board.fitness)
-        logs.append([number_evals, running_board.fitness])
+        logs_running.append([number_evals, running_board.fitness])
 
         if number_evals > configuration.evaluation_number:
             # print("Terminated by number of evals")
@@ -81,7 +80,7 @@ def single_run(run, game_map: hill.Map, configuration: init.Config, result):
         #     non_fitness_improvement = 0
         #     print("No improvement 100 iterations, restarting...")
         #     running_board = deepcopy(game_map)
-    local_optima.result_log = logs
+    local_optima.result_log = logs_running
     result[run] = local_optima
 
     return local_optima
@@ -145,7 +144,7 @@ def main():
         global_optima = all_logs[0]
         for i in range(0, len(all_logs)):
             print(f'run: {i}')
-            # logs.logs_write(configurations.log_file, i, all_logs[i].result_log)
+            logs.logs_write(configurations.log_file, i, all_logs[i].result_log)
             if global_optima.fitness < all_logs[i].fitness:
                 global_optima = all_logs[i]
             for j in range(0, len(all_logs[i].result_log)):

@@ -336,8 +336,7 @@ def insert_bulbs(puzzle_map, bulbs):
 
 
 # check black cell value by the number of surrounded bulbs
-# return - True: bulbs adjacent fit
-# return - False: bulbs adjacent don't fit
+# return - Number of black cell number - bulbs conflicts
 def check_black_bulb(map_data, number_rows, number_cols, black_data):
     conflict = 0
     black_cell_number = len(black_data)
@@ -416,8 +415,6 @@ def read_valid_map(map_data, number_rows, number_cols):
 
 
 # check all white cells which has a bulb in it
-# return - True: no two bulbs shine on each other
-# return - False: at least two bulbs shine on each other
 # @@ note @@ : puzzle_map will be updated by lighted info
 def check_bulb_shining(puzzle_map, row, col):
     # validation = True
