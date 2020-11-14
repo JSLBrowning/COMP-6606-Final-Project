@@ -15,7 +15,7 @@ import time
 import initial as init
 import hill
 import logs
-from board import GameBoard
+# from board import GameBoard
 from utils import Generate_Board, get_img_path, get_play_path, generate_dataset
 
 # --------imports from system------
