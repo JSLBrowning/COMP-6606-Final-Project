@@ -16,7 +16,7 @@ import initial as init
 import hill
 import logs
 # from board import GameBoard
-from utils import Generate_Board, get_img_path, get_play_path, generate_dataset
+# from utils import Generate_Board, get_img_path, get_play_path, generate_dataset
 
 # --------imports from system------
 import os
@@ -178,7 +178,7 @@ def main():
             if "--dataset" in sys.argv:
                 val = input("Enter your the size of training data to generate/store: ")
                 vals = int(val)
-                generate_dataset(vals)
+                # generate_dataset(vals)
 
         # song = get_play_path()
         # playsound(song)
