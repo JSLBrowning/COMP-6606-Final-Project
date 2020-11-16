@@ -20,7 +20,7 @@ import os
 import sys
 from operator import itemgetter
 import numpy as np
-from playsound import playsound
+# from playsound import playsound
 
 
 # read arguments

@@ -516,7 +516,10 @@ def moving_one_bulb(board: Map):
 
 # hill climb: choose best one of adding/removing/moving a bulb
 def hill_climb(board: Map, configuration):
-    results = [add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
+    if configuration.moving_action:
+        results = [add_one_bulb(board), reduce_one_bulb(board), moving_one_bulb(board)]
+    else:
+        results = [add_one_bulb(board), reduce_one_bulb(board)]
 
     results.sort(key=operator.attrgetter('fitness'), reverse=True)
     # print(f'The current local optimal: {results[0].fitness}')

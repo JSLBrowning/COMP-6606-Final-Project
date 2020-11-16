@@ -33,6 +33,7 @@ CELL_LIGHT = 8
 class Config:
     black_constraints = False
     annealing = False
+    moving_action = True
     annealing_temp = 0
     runs = 0
     constance = 0
@@ -55,6 +56,8 @@ class Config:
         self.random_seed = self.default["default"]["random_seed"]
         self.log_path = self.default["default"]["log_path"]
         self.solution_path = self.default["default"]["solution_path"]
+
+        self.moving_action = self.default["Algorithm"]["moving_action"].lower() in ['true']
 
         self.log_file = []
         self.solution_file = []
