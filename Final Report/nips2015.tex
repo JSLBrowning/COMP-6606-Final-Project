@@ -79,6 +79,65 @@ Below is an example board (left) and its optimal solution (right), provided by W
 
 According to research by Brandon McPhail [1], the light up puzzle is NP-complete, though it is not discussed nearly as much in artificial intelligence cycles as problems like eight queens—making it a perfect problem to solve for a project like this.
 
+\section{Puzzle Formalization}
+
+The first step of this project was to formalize the Light Up puzzle into a format that could be understood by an AI — to this end, we chose to represent boards as matrices of single digits, with each representing a possible state for the space. They are as follows:
+
+\begin{itemize}
+\item[] CELL\_BLACK\_ZERO = 0
+\item[] CELL\_BLACK\_ONE = 1
+\item[] CELL\_BLACK\_TWO = 2
+\item[] CELL\_BLACK\_THREE = 3
+\item[] CELL\_BLACK\_FOUR = 4
+\item[] CELL\_BLACK\_FIVE = 5
+\item[] CELL\_EMPTY = 6 (This value indicates an empty white cell.)
+\item[] CELL\_BULB = 7 (This value indicates a white cell with a bulb inside it.)
+\item[] CELL\_LIGHT = 8 (This value indicates that a cell is lit up by a bulb.)
+\item[] CELL\_BULB\_ZERO = 9 (This value indicates that a bulb cannot be placed adjacent to this cell.)
+\end{itemize}
+
+With these definitions, any conceivable Light Up puzzle can be translated into a format readable by our program.
+
+\begin{center}
+\includegraphics[width=\textwidth]{Formalization}
+\end{center}
+
+\section{Hill Climbing}
+
+The work we did with hill climbing was divided into three phases:
+
+\begin{enumerate}
+\item Vanilla hill climbing with no special puzzle parameters.
+\item Vanilla hill climbing with a puzzle with a single, unique optimal solution.
+\item Simulated annealing with a puzzle with a single, unique optimal solution.
+\end{enumerate}
+
+The first of these proved to be the weakest implementation — if the puzzle lacked a single, unique optimal solution, vanilla hill climbing could rarely produce a globally optimal solution. If there \textit{was} a single, unique optimal solution, however, vanilla hill climbing \textit{could} find it — given enough function evaluations. In one trial with an optimized puzzle, at 300 function evaluations, the vanilla hill climbing algorithm was able to find a globally optimal solution. This particular run was not representative of all runs with these parameters, however, which often required thousands of evaluations.
+
+It was also found that allowing the algorithm three actions (adding bulbs, removing bulbs, and relocating existing bulbs) generally improved performance relative to only allowing the algorithm to remove bulbs and add new ones. Allowing the algorithm three actions generally allowed it to produce optimal solutions faster. A \textit{t}-test was able to verify the statistical significance of this improvement.
+
+\subsection{Simulated Annealing}
+
+Simulated annealing was found to be a much more robust algorithm than vanilla hill climbing, often producing globally optimal solutions in less than one thousand function evaluations. “Often” does not mean “always,” however — in one instance, 8,700 evaluations were needed to find the global optimum. This is still an improvement over vanilla hill climbing with the same puzzle parameters, though, which sometimes needed over 10,000 evaluations to solve a problem of similar complexity.
+
+\section{Neural Network}
+
+The neural network we developed to predict optimal solutions was a feedforward neural network consisting of a 49-neuron input layer (for a 7x7 board), two hidden layers of 1,024 neurons each), and an output layer of 49 neurons. The activation functions utilized were ReLU and Softmax, and the optimization function utilized was stochastic gradient descent.
+
+To train our network, we used a training set of 4,000 randomly-generated boards and their solutions, with 1,000 more reserved as a test set. Training on this data set took about 24 hours. This neural network proved to be quite good at predicting the outputs of the hill climbing algorithms, as can be seen in an example below (original on the left, predicted on the right).
+
+\includegraphics[width=\textwidth]{Prediction}
+
+The neural network did produce some common errors, however — some squares were labelled incorrectly. We suspect this is because the training set was too limited to fully capture the relationship between initialized boards and their solutions. We suspected using a convolutional neural network and gathering more data could help correct these errors, and attempted to pursue this.
+
+\subsection{Convolutional Neural Network}
+
+Our convolutional neural network used 49 input neurons, four two-dimensional convolution layers, and two dense layers (one being the 49-neuron output layer). The convolutional neural network was trained on the same data as the feedforward network, and ultimately produced similar errors. We take this to be evidence that, when training neural networks, having a large volume of quality data is far more important than the particular choice of neural network used.
+
+\section{Next Steps}
+
+While we are proud of the work we have done here, there is no doubt that more work (particularly, exploration of different algorithms) could yield even better results. We strongly believe that the Light Up puzzle is an excellent logic puzzle for introducing newcomers to the field of AI to some of the more advanced algorithms available to them.
+
 \newpage
 
 \subsubsection*{Acknowledgments}
