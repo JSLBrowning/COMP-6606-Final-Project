@@ -66,35 +66,36 @@ https://youtu.be/o6Wm-owLuqI
 #       Neural Network section  	#
 
 
-	1 - Dependencies:
-		For simplicity you can copy paste the following modules and packages.
-		If missing some you can install on your PC.
-		
-			from __future__ import print_function, division
-			import torch
-			import torch.nn as nn
-			import torchvision
-			from torchvision import datasets, transforms, utils
-			from torch import nn, optim
-			from torch.autograd import Variable
-			from torch.utils.data import Dataset, DataLoader
-			import torch.nn.functional as F
+1 - Dependencies:
+	For simplicity you can copy paste the following modules and packages.
+	If missing some you can install on your PC.
+
+		from __future__ import print_function, division
+		import torch
+		import torch.nn as nn
+		import torchvision
+		from torchvision import datasets, transforms, utils
+		from torch import nn, optim
+		from torch.autograd import Variable
+		from torch.utils.data import Dataset, DataLoader
+		import torch.nn.functional as F
 			
-			import cv2
-			import os
-			import numpy as np
-			import time
-			import matplotlib.pyplot as plt
-			from skimage import transform
+		import cv2
+		import os
+		import numpy as np
+		import time
+		import matplotlib.pyplot as plt
+		from skimage import transform
 
 2 - Training Models:
+
 	a) command: 
 		cd codes
 		python3 trainer.py
 	b) changes: 
-		various CNN models can be used to trained. 
-		The models are available in models.py; 
-		feel free to design your own :)
+			various CNN models can be used to trained. 
+			The models are available in models.py; 
+			feel free to design your own :)
 	c) pretrained models: Already trained weights can be found in codes/logs/Pretrained_Models/
 		(i)  HillClimb_trained.pt - 
 			HillClimb version using ConvNet3 in models.py
@@ -102,6 +103,7 @@ https://youtu.be/o6Wm-owLuqI
 			Simulated Annealing version using ConvNet4 (includes dropout regularization) in models.py
 
 3 - Testing Models:
+
 	a) command: 
 		cd codes 
 		python3 test_neuralnets.py
@@ -111,9 +113,11 @@ https://youtu.be/o6Wm-owLuqI
 		Note: Make sure to load the corresponding model from models.py - Refer to the section above for more details.
 
 4 - Visualizing the Boards: 
+
 		a) Board Function -    	
 			To visualize each board, a class can be found on boards.py. 
 		b) Generating boards - 
 			To generate them, a function was developed to run boards.py in the utils.py code
+			 
 		** NOTE: 
-			You don't need to implement anything new as the board.py and utils.py are called directly in trainer.py and test_neuralnets.py - ENJOY
+			You don't need to implement anything new as the board.py and utils.py are called directly in trainer.py and test_neuralnets.py - ENJOY.
