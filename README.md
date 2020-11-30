@@ -6,11 +6,11 @@ We chose to focus on the [Light Up puzzle](https://en.wikipedia.org/wiki/Light_U
 #################################
 #       running codes  	#
 ##################################
-cd codes
 
-python3 source/main.py problems/a2.lup source/default.cfg
+	cd codes
+	python3 source/main.py problems/a2.lup source/default.cfg
 
-# 	code running example and explantion for key configurations	#
+# 	code running example on a vidoe	#
 
 https://youtu.be/o6Wm-owLuqI
 
@@ -52,29 +52,18 @@ log_path = ./logs/test_
 solution_path = ./solutions/test
 
 
-
-
 # Board Legend #
 
-CELL_BLACK_ZERO = 0
-
-CELL_BLACK_ONE = 1
-
-CELL_BLACK_TWO = 2
-
-CELL_BLACK_THREE = 3
-
-CELL_BLACK_FOUR = 4
-
-CELL_BLACK_FIVE = 5
-
-CELL_BULB_ZERO = 9 (This value indicates that a bulb cannot be placed adjacent to this cell.)
-
-CELL_EMPTY = 6 (This value indicates an empty white cell.)
-
-CELL_BULB = 7 (This value indicates a white cell with a bulb inside it.)
-
-CELL_LIGHT = 8 (This value indicates that a cell is lit up by a bulb.)
+	CELL_BLACK_ZERO = 0
+	CELL_BLACK_ONE = 1
+	CELL_BLACK_TWO = 2
+	CELL_BLACK_THREE = 3
+	CELL_BLACK_FOUR = 4
+	CELL_BLACK_FIVE = 5
+	CELL_BULB_ZERO = 9 (This value indicates that a bulb cannot be placed adjacent to this cell.)
+	CELL_EMPTY = 6 (This value indicates an empty white cell.)
+	CELL_BULB = 7 (This value indicates a white cell with a bulb inside it.)
+	CELL_LIGHT = 8 (This value indicates that a cell is lit up by a bulb.)
 
 
 #########################################
@@ -83,6 +72,7 @@ CELL_LIGHT = 8 (This value indicates that a cell is lit up by a bulb.)
 
 1 - Dependencies:
 	a) For simplicity you can copy paste the following modules and packages, if missing some you can install on your PC
+
 		from __future__ import print_function, division
 		import torch
 		import torch.nn as nn
