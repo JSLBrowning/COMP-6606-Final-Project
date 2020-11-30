@@ -81,13 +81,12 @@ https://youtu.be/o6Wm-owLuqI
 			from torch.utils.data import Dataset, DataLoader
 			import torch.nn.functional as F
 			
-<<<<<<< HEAD
-		import cv2
-		import os
-		import numpy as np
-		import time
-		import matplotlib.pyplot as plt
-		from skimage import transform
+			import cv2
+			import os
+			import numpy as np
+			import time
+			import matplotlib.pyplot as plt
+			from skimage import transform
 
 2 - Training Models:
 	a) command: 
@@ -119,30 +118,3 @@ https://youtu.be/o6Wm-owLuqI
 			To generate them, a function was developed to run boards.py in the utils.py code
 		** NOTE: 
 			You don't need to implement anything new as the board.py and utils.py are called directly in trainer.py and test_neuralnets.py - ENJOY
-=======
-			import cv2
-			import os
-			import numpy as np
-			import time
-			import matplotlib.pyplot as plt
-			from skimage import transform
-
-	2 - Training Models:
-		a) command: cd codes; python3 trainer.py
-		b) changes: various CNN models can be used to trained. The models
-			    are available in models.py; feel free to design your own :)
-		c) pretrained models: Already trained weights can be found in codes/logs/Pretrained_Models/
-			(i)  HillClimb_trained.pt - HillClimb version using ConvNet3 in models.py
-			(ii) Annealing_Conv4_Akari.pt - Simulated Annealing version using ConvNet4 (includes dropout regularization) in models.py
-	
-	3 - Testing Models:
-		a) command: cd codes; python3 test_neuralnets.py
-		b) changes: you can modify the pretrained model from codes/logs/Pretrained_Models/; youi can also test your own trained models :)
-			    Note: Make sure to load the corresponding model from models.py - Refer to the section above for more details.
-
-
-	4 - Visualizing the Boards: 
-		a) Board Function -    To visualize each board, a class can be found on boards.py. 
-		b) Generating boards - To generate them, a function was developed to run boards.py in the utils.py code
-		** NOTE: You don't need to implement anything new as the board.py and utils.py are called directly in trainer.py and test_neuralnets.py - ENJOY
->>>>>>> f0a3bb5d2db9a5b3ff89142d93b3904c2556d48f
