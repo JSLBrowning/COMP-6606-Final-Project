@@ -24,7 +24,8 @@ https://youtu.be/o6Wm-owLuqI
 
 		annealing = true /false
 
-3.	set simulated annealing temperature	 
+3.	set simulated annealing temperature	
+ 
 		annealing_temp = 0.5
 
 4.	set random seed, time or an integer	 
