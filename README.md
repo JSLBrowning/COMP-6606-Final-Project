@@ -7,11 +7,11 @@ We chose to focus on the [Light Up puzzle](https://en.wikipedia.org/wiki/Light_U
 #       running codes  	#
 
 	cd codes
-	python3 source/main.py problems/a2.lup source/default.cfg
+	python3 source/main.py puzzles/03.txt source/default.cfg
 
 # 	code running example on a vidoe	#
 
-https://youtu.be/o6Wm-owLuqI
+	https://youtu.be/o6Wm-owLuqI
 
 
 #       configuration:  	default.cfg			#
@@ -25,7 +25,7 @@ https://youtu.be/o6Wm-owLuqI
 		annealing = true /false
 
 3.	set simulated annealing temperature	
- 
+
 		annealing_temp = 0.5
 
 4.	set random seed, time or an integer	 
