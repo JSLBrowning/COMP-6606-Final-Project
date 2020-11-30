@@ -105,19 +105,19 @@ https://youtu.be/o6Wm-owLuqI
 3 - Testing Models:
 
 	a) command: 
-		cd codes 
-		python3 test_neuralnets.py
+	cd codes 
+	python3 test_neuralnets.py
 	b) changes: 
-		you can modify the pretrained model from codes/logs/Pretrained_Models/; 
-		youi can also test your own trained models :)
-		Note: Make sure to load the corresponding model from models.py - Refer to the section above for more details.
+	you can modify the pretrained model from codes/logs/Pretrained_Models/; 
+	youi can also test your own trained models :)
+	Note: Make sure to load the corresponding model from models.py - Refer to the section above for more details.
 
 4 - Visualizing the Boards: 
 
-		a) Board Function -    	
-			To visualize each board, a class can be found on boards.py. 
-		b) Generating boards - 
-			To generate them, a function was developed to run boards.py in the utils.py code
+	a) Board Function -    	
+		To visualize each board, a class can be found on boards.py. 
+	b) Generating boards - 
+		To generate them, a function was developed to run boards.py in the utils.py code
 			 
-		** NOTE: 
-			You don't need to implement anything new as the board.py and utils.py are called directly in trainer.py and test_neuralnets.py - ENJOY.
+	** NOTE: 
+		You don't need to implement anything new as the board.py and utils.py are called directly in trainer.py and test_neuralnets.py - ENJOY.
