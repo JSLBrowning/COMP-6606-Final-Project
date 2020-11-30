@@ -18,37 +18,37 @@ https://youtu.be/o6Wm-owLuqI
 #       configuration:  	default.cfg			#
 #################################
 
-1. 	optimizied initialization?  true or false	
+1.	optimizied initialization?  true or false	
 
-	unique_optimize = true / false
+		unique_optimize = true / false
 
-2. 	enable simulated annealing?  true or false	 
+2.	enable simulated annealing?  true or false	 
 
-	annealing = true /false
+		annealing = true /false
 
-3. 	set simulated annealing temperature	 
-	annealing_temp = 0.5
+3.	set simulated annealing temperature	 
+		annealing_temp = 0.5
 
-4. 	set random seed, time or an integer	 
+4.	set random seed, time or an integer	 
 
-	random_seed = "time"
+		random_seed = "time"
 
 5.	internal parameters for algorithm, test purpose   
 
-	parameters_for_Black = 4
+		parameters_for_Black = 4
 
-6.	 set the number of runs  at a time    
+6.	set the number of runs  at a time    
 
-	number_runs: 10
+		number_runs: 10
 
-7.   set the number of evaluations/neighbors for a single run    
+7.	set the number of evaluations/neighbors for a single run    
 
-	termination_evaluation =  1000
+		termination_evaluation =  1000
 
-8.	 set the log saving path and file name apprex 	
+8.	set the log saving path and file name apprex 	
 
-	log_path = ./logs/test_
-	solution_path = ./solutions/test
+		log_path = ./logs/test_
+		solution_path = ./solutions/test
 
 
 # Board Legend #
