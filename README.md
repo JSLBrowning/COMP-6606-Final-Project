@@ -10,41 +10,45 @@ cd codes
 
 python3 source/main.py problems/a2.lup source/default.cfg
 
-
-code running example and explantion for key configurations:
+# 	code running example and explantion for key configurations	#
 
 https://youtu.be/o6Wm-owLuqI
 
 #################################
-#       configuration  		#
-#   	default.cfg			#
+#       configuration:  	default.cfg			#
 #################################
 
-# optimizied initialization?  true or false	#
+1. optimizied initialization?  true or false	
 
 unique_optimize = true / false
 
-# enable simulated annealing?  true or false	 #
+2. enable simulated annealing?  true or false	 
+
 annealing = true /false
 
-# set simulated annealing temperature	 #
+3. set simulated annealing temperature	 
 annealing_temp = 0.5
 
-# set random seed, time or an integer	 #
+4. set random seed, time or an integer	 
+
 random_seed = "time"
 
-# internal parameters for algorithm, test purpose    #
+5. internal parameters for algorithm, test purpose   
 
 parameters_for_Black = 4
 
-#  set the number of runs  at a time    #
+6.  set the number of runs  at a time    
+
 number_runs: 10
 
-#    set the number of evaluations/neighbors for a single run    #
+7.   set the number of evaluations/neighbors for a single run    
+
 termination_evaluation =  1000
 
-#	set the log saving path and file name apprex 	#
+8.	set the log saving path and file name apprex 	
+
 log_path = ./logs/test_
+
 solution_path = ./solutions/test
 
 
@@ -76,8 +80,6 @@ CELL_LIGHT = 8 (This value indicates that a cell is lit up by a bulb.)
 #########################################
 #       Neural Network section  	#
 #########################################
-
-# Neural Networks #
 
 1 - Dependencies:
 	a) For simplicity you can copy paste the following modules and packages, if missing some you can install on your PC
