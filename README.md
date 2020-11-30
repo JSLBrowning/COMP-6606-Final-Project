@@ -3,9 +3,8 @@ The purpose of this project was to apply the techniques we learned in Auburn Uni
 
 We chose to focus on the [Light Up puzzle](https://en.wikipedia.org/wiki/Light_Up_(puzzle)), and solved it using hill climbing, simulated annealing, and a deep neural network.
 
-#################################
+
 #       running codes  	#
-##################################
 
 	cd codes
 	python3 source/main.py problems/a2.lup source/default.cfg
@@ -14,9 +13,8 @@ We chose to focus on the [Light Up puzzle](https://en.wikipedia.org/wiki/Light_U
 
 https://youtu.be/o6Wm-owLuqI
 
-#################################
+
 #       configuration:  	default.cfg			#
-#################################
 
 1.	optimizied initialization?  true or false	
 
@@ -65,12 +63,13 @@ https://youtu.be/o6Wm-owLuqI
 	CELL_LIGHT = 8 (This value indicates that a cell is lit up by a bulb.)
 
 
-#########################################
 #       Neural Network section  	#
-#########################################
+
 
 	1 - Dependencies:
-		a) For simplicity you can copy paste the following modules and packages, if missing some you can install on your PC
+		For simplicity you can copy paste the following modules and packages.
+		If missing some you can install on your PC.
+		
 			from __future__ import print_function, division
 			import torch
 			import torch.nn as nn
